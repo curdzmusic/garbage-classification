@@ -2,7 +2,7 @@ import streamlit as st
 
 import torch
 from PIL import Image
-import cv2
+# import cv2
 import numpy as np
 
 from model.model_load import load_checkpoint
