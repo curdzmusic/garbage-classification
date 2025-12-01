@@ -25,79 +25,103 @@ def display_percentage_bar(label, prob, class_names):
         if class_names[i] == label:
             ax.barh(i, v, align='center', color='orange')
 
-def display_prediction_charts(predicted_label, probs, class_names, title="Phân bố tỉ lệ phát hiện"):
+def create_donut_figure(predicted_label, probs, class_names, title="Biểu đồ donut tỉ lệ (%)"):
     """
-    Hiển thị 2 biểu đồ cạnh nhau:
-      - Donut (pie with hole) hiển thị phần trăm cho từng class
-      - Biểu đồ cột hiển thị phần trăm, highlight class dự đoán
-
-    probs: list hoặc 1D array (giá trị 0-1 hoặc 0-100)
-    class_names: list tên lớp (cùng độ dài)
-    predicted_label: tên lớp được dự đoán (để highlight)
+    Trả về Plotly Figure cho biểu đồ donut (pie with hole).
+    probs: list (giá trị 0-1 hoặc 0-100)
     """
-    # chuẩn hóa probs về % nếu cần
     probs = list(probs)
-    if max(probs) <= 1.0:
-        pct = [p * 100.0 for p in probs]
-    else:
-        pct = [float(p) for p in probs]
+    if len(probs) == 0:
+        return go.Figure()
+    pct = [p * 100.0 for p in probs] if max(probs) <= 1.0 else [float(p) for p in probs]
 
-    # màu (có thể tuỳ chỉnh)
     base_colors = px.colors.qualitative.Plotly
-    # lặp màu đủ dài
     colors = [base_colors[i % len(base_colors)] for i in range(len(class_names))]
-    # highlight màu khác cho predicted
-    highlight_color = "#FFA500"  # cam
-    colors_bar = [highlight_color if name == predicted_label else colors[i] for i, name in enumerate(class_names)]
-    colors_pie = colors.copy()
-    # làm màu của predicted đậm hơn trên donut
-    for i, name in enumerate(class_names):
-        if name == predicted_label:
-            colors_pie[i] = highlight_color
+    highlight_color = "#FFA500"
+    colors_pie = [highlight_color if name == predicted_label else colors[i] for i, name in enumerate(class_names)]
 
-    # Donut chart
-    fig_pie = go.Figure(
+    fig = go.Figure(
         go.Pie(
             labels=class_names,
             values=pct,
             hole=0.5,
             marker=dict(colors=colors_pie, line=dict(color='#222222', width=1)),
+            textposition='outside',
+            textfont=dict(size=16, color='#ffffff'),
             hovertemplate='%{label}: %{value:.2f}%<extra></extra>',
             textinfo='percent'
         )
     )
-    fig_pie.update_layout(
-        title=dict(text=title, x=0.5, xanchor='center'),
+    fig.update_layout(
+        title=dict(text=title, x=0.5, font=dict(size=20), xanchor='center'),
         showlegend=True,
         margin=dict(l=10, r=10, t=40, b=10),
-        legend=dict(orientation='v', x=1.02, y=0.5)
+        legend=dict(orientation='v', x=1.02, y=0.5, font=dict(size=24))
     )
+    return fig
 
-    # Bar chart
-    max_y = max(100, max(pct) + 5)
-    fig_bar = go.Figure(
+def create_bar_figure(predicted_label, probs, class_names, title="Biểu đồ cột tỉ lệ (%)"):
+    """
+    Trả về Plotly Figure cho biểu đồ cột (bar) — chuyển sang thanh ngang và hiển thị % ngoài thanh.
+    """
+    probs = list(probs)
+    if len(probs) == 0:
+        return go.Figure()
+    pct = [p * 100.0 for p in probs] if max(probs) <= 1.0 else [float(p) for p in probs]
+
+    base_colors = px.colors.qualitative.Plotly
+    colors = [base_colors[i % len(base_colors)] for i in range(len(class_names))]
+    highlight_color = "#FFA500"
+    colors_bar = [highlight_color if name == predicted_label else colors[i] for i, name in enumerate(class_names)]
+
+    # Tính giới hạn trục X và thêm một padding âm nhỏ để kéo điểm 0 ra khỏi mép trái
+    max_x = max(100, max(pct) + 5)
+
+    fig = go.Figure(
         go.Bar(
-            x=class_names,
-            y=pct,
+            x=pct,
+            y=class_names,
+            orientation='h',
             marker_color=colors_bar,
-            text=[f"{v:.1f}%" for v in pct],
-            textposition='auto',
-            hovertemplate='%{x}: %{y:.1f}%<extra></extra>'
+            text=[f"{v:.2f}%" for v in pct],
+            textposition='outside',
+            textfont=dict(size=16, color='#ffffff'),
+            hovertemplate='%{y}: %{x:.2f}%<extra></extra>'
         )
     )
-    fig_bar.update_layout(
-        title=dict(text="Biểu đồ cột tỉ lệ (%)", x=0.5),
-        yaxis=dict(title='Tỉ lệ (%)', range=[0, max_y]),
-        xaxis=dict(tickangle=-15),
-        margin=dict(l=20, r=10, t=40, b=20)
+    fig.update_layout(
+        title=dict(
+            text=title,
+            x=0.5,
+            font=dict(size=20),
+            xanchor='center'),
+        xaxis=dict(
+            title='Tỉ lệ (%)',
+            tickfont=dict(size=18),
+            range=[0, max_x],
+            automargin=True
+        ),
+        yaxis=dict(
+            autorange="reversed", # giữ thứ tự giống bar dọc trước đó
+            tickfont=dict(size=18),
+            automargin=True
+        ),  
+        margin=dict(l=40, r=40, t=40, b=20)
     )
+    return fig
 
-    # Hiển thị trên Streamlit: 2 cột
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        st.plotly_chart(fig_pie, use_container_width=True)
-    with col2:
+def display_prediction_charts(predicted_label, probs, class_names, title="Phân bố tỉ lệ đánh giá"):
+    """
+    Hiển thị 2 biểu đồ cạnh nhau: donut và bar bằng các hàm tách riêng.
+    Trả về tuple (fig_donut, fig_bar).
+    """
+    fig_pie = create_donut_figure(predicted_label, probs, class_names, title="Biểu đồ donut tỉ lệ (%)")
+    fig_bar = create_bar_figure(predicted_label, probs, class_names, title="Biểu đồ cột tỉ lệ (%)")
+
+    row1, row2 = st.rows([1, 1])
+    with row1:
         st.plotly_chart(fig_bar, use_container_width=True)
+    with row2:
+        st.plotly_chart(fig_pie, use_container_width=True)
 
-    # trả về figures nếu cần dùng lại
     return fig_pie, fig_bar
