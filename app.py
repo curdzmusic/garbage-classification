@@ -2,18 +2,18 @@ import streamlit as st
 
 import torch
 from PIL import Image
-# import cv2
+import cv2
 import numpy as np
 
 from model.model_load import load_checkpoint
 from util.utilities import get_transform
 from util.inference import predict_image, predict_image_probs
 from util.recycle_info import get_recycle_info
-from util.chart_render import display_prediction_charts
+# from util.chart_render import display_prediction_charts
 from util.predict_analysis import run_full_prediction
 from components.upload import get_input_image
-from components.result_display import class_probs_to_base64_image
-from components.result_display import show_topk_predictions, show_topk_chart
+from components.result_display import class_probs_to_base64_image, show_topk_predictions, show_topk_chart
+from components.result_display import dispay_bar_chart, display_donut_chart
 
 # ========================
 # 
@@ -76,9 +76,23 @@ if image:
                  if hasattr(prediction["all_probs"], "tolist")
                  else list(prediction["all_probs"]))
 
+    dispay_bar_chart(
+        predicted_label=prediction['predicted_class'],
+        probs=all_probs,
+        class_names=CLASS_NAMES,
+        title="Biểu đồ cột tỉ lệ (%)"
+    )
+
+    # display_donut_chart(
+    #     predicted_label=prediction['predicted_class'],
+    #     probs=all_probs,
+    #     class_names=CLASS_NAMES,
+    #     title="Biểu đồ donut tỉ lệ (%)"
+    # )
+
     # Hiển thị biểu đồ xác suất (sử dụng toàn bộ vector probs)
-    img_data_uri = class_probs_to_base64_image(all_probs, CLASS_NAMES)
-    st.image(img_data_uri, caption="Xác suất dự đoán", use_column_width=True)
+    # img_data_uri = class_probs_to_base64_image(all_probs, CLASS_NAMES)
+    # st.image(img_data_uri, caption="Xác suất dự đoán", use_column_width=True)
 
     # Kết quả chính
     st.subheader(f"Kết quả: {prediction['predicted_class']}")
