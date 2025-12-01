@@ -28,11 +28,11 @@ Dự án này là một hệ thống phân loại rác thải tự động sử 
   - **Torchvision**: Thư viện hỗ trợ xử lý và transform hình ảnh.
   - **Streamlit**: Framework web để xây dựng giao diện người dùng nhanh chóng.
   - **PIL/Pillow**: Xử lý và thao tác với hình ảnh.
-  - **OpenCV**: Xử lý hình ảnh và video (nếu cần).
   - **NumPy**: Tính toán số học và xử lý mảng.
   - **Matplotlib**: Vẽ biểu đồ và hiển thị dữ liệu.
   - **Plotly**: Tạo biểu đồ tương tác.
   - **Pandas**: Xử lý và phân tích dữ liệu.
+  - **OpenCV**: Xử lý hình ảnh và video (nếu cần).
 
 - **Frontend**:
   - **Streamlit UI**: Giao diện người dùng được xây dựng hoàn toàn bằng Streamlit.
@@ -209,5 +209,6 @@ Hệ thống có thể phân loại 10 loại rác thải sau:
 - **Lỗi khi tải ảnh từ URL**:
   - Kiểm tra kết nối internet.
   - Đảm bảo URL ảnh hợp lệ và có thể truy cập được.
+
 
 
