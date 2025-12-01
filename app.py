@@ -55,7 +55,8 @@ CLASS_NAMES = [
 ]
 IMG_SIZE = 224
 
-st.title("♻️ Phân loại rác thải")
+# st.title("♻️ Phân loại rác thải")
+st.title("♻️ Garbage Classification Web App")
 st.write("Upload ảnh, nhập URL hoặc dùng camera để phân loại rác!")
 
 # Load Model
@@ -132,3 +133,4 @@ if image:
         st.error(f"Không tái chế — {note}")
     else:
         st.info(f"{status} — {note}")
+
