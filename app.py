@@ -20,7 +20,7 @@ from components.result_display import dispay_bar_chart, display_donut_chart
 # ========================
 
 st.set_page_config(
-    page_title="Garbage Classification Web App",
+    page_title="Phân loại rác thải",
     page_icon="♻️",
     layout="centered",
 )
@@ -55,7 +55,7 @@ CLASS_NAMES = [
 ]
 IMG_SIZE = 224
 
-st.title("♻️ Garbage Classification Web App")
+st.title("♻️ Phân loại rác thải")
 st.write("Upload ảnh, nhập URL hoặc dùng camera để phân loại rác!")
 
 # Load Model
