@@ -67,7 +67,9 @@ def create_bar_figure(predicted_label, probs, class_names, title="Biểu đồ c
     probs = list(probs)
     if len(probs) == 0:
         return go.Figure()
-    pct = [p * 100.0 for p in probs] if max(probs) <= 1.0 else [float(p) for p in probs]
+    # pct = [p * 100.0 for p in probs] if max(probs) <= 1.0 else [float(p) for p in probs]
+    probs_pct = [p * 100 for p in probs]
+    # max_p = max(probs_pct)
 
     base_colors = px.colors.qualitative.Plotly
     colors = [base_colors[i % len(base_colors)] for i in range(len(class_names))]
@@ -75,15 +77,15 @@ def create_bar_figure(predicted_label, probs, class_names, title="Biểu đồ c
     colors_bar = [highlight_color if name == predicted_label else colors[i] for i, name in enumerate(class_names)]
 
     # Tính giới hạn trục X và thêm một padding âm nhỏ để kéo điểm 0 ra khỏi mép trái
-    max_x = max(100, max(pct) + 5)
+    max_x = max(100, max(probs_pct) + 5)
 
     fig = go.Figure(
         go.Bar(
-            x=pct,
+            x=probs_pct,
             y=class_names,
             orientation='h',
             marker_color=colors_bar,
-            text=[f"{v:.2f}%" for v in pct],
+            text=[f"{v:.2f}%" for v in probs_pct],
             textposition='outside',
             textfont=dict(size=16, color='#ffffff'),
             hovertemplate='%{y}: %{x:.2f}%<extra></extra>'
