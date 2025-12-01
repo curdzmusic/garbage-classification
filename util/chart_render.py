@@ -77,7 +77,7 @@ def create_bar_figure(predicted_label, probs, class_names, title="Biểu đồ c
     colors_bar = [highlight_color if name == predicted_label else colors[i] for i, name in enumerate(class_names)]
 
     # Tính giới hạn trục X và thêm một padding âm nhỏ để kéo điểm 0 ra khỏi mép trái
-    max_x = max(100, max(probs_pct) + 5)
+    max_x = max(100, max(probs_pct) * 1.1 + 5)
 
     fig = go.Figure(
         go.Bar(
