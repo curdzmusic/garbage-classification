@@ -93,7 +93,7 @@ Dự án này là một hệ thống phân loại rác thải tự động sử 
    [http://localhost:8501](http://localhost:8501)
 
    Hiện tại ứng dụng đã được deploy trên nền tảng online.  
-   Link truy cập :   
+   Link truy cập : [https://hmud-garbage-classification.streamlit.app/](https://hmud-garbage-classification.streamlit.app/)
 
    Nếu không tự động mở, bạn có thể truy cập thủ công bằng cách mở trình duyệt và nhập địa chỉ trên.
 
@@ -209,4 +209,5 @@ Hệ thống có thể phân loại 10 loại rác thải sau:
 - **Lỗi khi tải ảnh từ URL**:
   - Kiểm tra kết nối internet.
   - Đảm bảo URL ảnh hợp lệ và có thể truy cập được.
+
 
