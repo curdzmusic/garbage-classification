@@ -29,17 +29,29 @@ st.set_page_config(
 # CONFIG
 # ========================
 MODEL_PATH = "model/garbage_classifier_model.pth"
+# CLASS_NAMES = [
+#     'battery', 
+#     'biological', 
+#     'cardboard', 
+#     'clothes',
+#     'glass', 
+#     'metal', 
+#     'paper', 
+#     'plastic', 
+#     'shoes', 
+#     'trash'
+# ]
 CLASS_NAMES = [
-    'battery', 
-    'biological', 
-    'cardboard', 
-    'clothes',
-    'glass', 
-    'metal', 
-    'paper', 
-    'plastic', 
-    'shoes', 
-    'trash'
+    'pin', 
+    'rác sinh học', 
+    'bìa cứng', 
+    'quần áo',
+    'thủy tinh', 
+    'kim loại', 
+    'giấy', 
+    'nhựa', 
+    'giày dép', 
+    'rác tổng hợp'
 ]
 IMG_SIZE = 224
 
@@ -120,4 +132,3 @@ if image:
         st.error(f"Không tái chế — {note}")
     else:
         st.info(f"{status} — {note}")
-
