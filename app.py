@@ -22,7 +22,8 @@ from components.result_display import dispay_bar_chart, display_donut_chart
 st.set_page_config(
     page_title="Phân loại rác thải",
     page_icon="♻️",
-    layout="centered",
+    # layout="centered",
+    layout="wide",
 )
 
 # ========================
@@ -133,4 +134,5 @@ if image:
         st.error(f"Không tái chế — {note}")
     else:
         st.info(f"{status} — {note}")
+
 
